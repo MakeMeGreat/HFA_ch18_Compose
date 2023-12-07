@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,13 +54,31 @@ fun ConvertButton(clicked: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EnterTemterature(temperature: String, changed: (String) -> Unit) {
+    TextField(
+        value = temperature,
+        label = { Text(text = "Enter a temperature in Celsius") },
+        onValueChange = changed,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
 @Composable
 fun MainActivityContent() {
     val celsius = remember { mutableStateOf(0) }
+    val newCelcius = remember { mutableStateOf("") }
+
     Column {
         Header(R.drawable.sunrise, "sunrise image")
-        ConvertButton { celsius.value = 20 }
-        TemperatureText(celsius = 0)
+        EnterTemterature(temperature = newCelcius.value, changed = { newCelcius.value = it })
+        ConvertButton {
+            newCelcius.value.toIntOrNull()?.let {
+                celsius.value = it
+            }
+        }
+        TemperatureText(celsius.value)
     }
 }
 
