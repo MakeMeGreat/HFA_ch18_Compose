@@ -4,11 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -24,7 +29,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityContent()
+            MaterialTheme {
+                Surface {
+                    MainActivityContent()
+                }
+            }
         }
     }
 }
@@ -70,12 +79,21 @@ fun MainActivityContent() {
     val celsius = remember { mutableStateOf(0) }
     val newCelcius = remember { mutableStateOf("") }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
         Header(R.drawable.sunrise, "sunrise image")
         EnterTemterature(temperature = newCelcius.value, changed = { newCelcius.value = it })
-        ConvertButton {
-            newCelcius.value.toIntOrNull()?.let {
-                celsius.value = it
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ConvertButton {
+                newCelcius.value.toIntOrNull()?.let {
+                    celsius.value = it
+                }
             }
         }
         TemperatureText(celsius.value)
@@ -86,5 +104,9 @@ fun MainActivityContent() {
 @Preview(showBackground =  true)
 @Composable
 fun PreviewMainActivity() {
-    MainActivityContent()
+    MaterialTheme {
+        Surface {
+            MainActivityContent()
+        }
+    }
 }
